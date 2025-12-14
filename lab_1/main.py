@@ -1,13 +1,14 @@
 import os
 import pickle
 
-print(
-    "----------------------------------------------------- 5 STAR HOTEL AND RESORTS -----------------------------------------------------------------")
+
+print('-' * 53, "5 STAR HOTEL AND RESORTS", '-' * 53)
 
 u = list()
 Delux = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 Semi_Delux = (11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25)
-General = (26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45)
+General = (26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
+           36, 37, 38, 39, 40, 41, 42, 43, 44, 45)
 Joint_Room = (46, 47, 48, 49, 50, 46, 47, 48, 49, 50)
 m = [9]
 G = []
@@ -18,9 +19,9 @@ def chk_name():
         print("\n")
         name = input("ENTER GUEST NAME:")
         a = name.isdigit()
+
         if len(name) != 0 and a != True:
             return name
-
             break
         else:
             print("Invalid input! Please input a valid name")
@@ -32,10 +33,10 @@ def chk_add():
         print("\n")
         address = input("ENTER GUEST ADDRESS:")
         a = address.isdigit()
+
         if len(address) != 0 and a != True:
             return address
             break
-
         else:
             print("Invalid input ")
         print(" ")
@@ -45,7 +46,10 @@ def chk_mo():
     while True:
         print("\n")
         mobile_no = input("ENTER MOBILE/PHONE NO.:")
-        if mobile_no.isdigit() == True and len(mobile_no) != 0 and len(mobile_no) == 10:
+
+        if (mobile_no.isdigit() == True and
+                len(mobile_no) != 0 and
+                len(mobile_no) == 10):
             return mobile_no
             break
         else:
@@ -58,6 +62,7 @@ def chk_day():
         print("\n")
         no_of_days = input("ENTER NO. OF DAYS GUEST WANT TO STAY:")
         a = no_of_days.isdigit()
+
         if a == True and len(no_of_days) != 0:
             return no_of_days
             break
@@ -70,6 +75,7 @@ def chk_pay():
         print("\n")
         op = input("Enter guest's choice:")
         a = op.isdigit()
+
         if len(op) != 0 and a == True and (op == "1" or op == "2"):
             op = int(op)
             return op
@@ -103,10 +109,12 @@ class save:
         while True:
             ch = input("Enter guest's choice:")
             a = ch.isdigit()
-            if len(ch) != 0 and a == True and (ch == "1" or ch == "2" or ch == "3" or ch == "4"):
+            if (len(ch) != 0 and a == True and
+                    (ch == "1" or ch == "2" or ch == "3" or ch == "4")):
                 break
             else:
-                print("invalid input ")
+                print("invalid input")
+
         ch = int(ch)
         if ch == 1:
             self.price = self.price + (2000 * self.no_of_days)
@@ -145,10 +153,10 @@ class save:
         print("\n")
         print("YOUR TOTAL BILL IS Rs.", self.price)
         print("\n")
+
         if m[0] == 1:
             a = Delux
         elif m[0] == 2:
-
             a = Semi_Delux
         elif m[0] == 3:
             a = General
@@ -177,6 +185,7 @@ class save:
         print("\n")
         print(" THANK YOU ")
         print(" HOPE YOU WOULD ENJOY OUR SERVICE ")
+
 
 while True:
     print("\n")
@@ -222,13 +231,13 @@ while True:
         f = open("hotel.dat", "rb")
         f1 = open("hotel.dat", "ab")
         n = 0
+
         try:
             while True:
                 s = pickle.load(f)
                 if s.room == v:
                     n = 1
-                    name1=s.name
-
+                    name1 = s.name
                     print(" ")
                 else:
                     pickle.dump(s, f1)
@@ -236,8 +245,7 @@ while True:
             if n == 0:
                 print("NO GUEST IN ROOM ", v)
             elif n == 1:
-
-                print("THANK YOU",name1,"2 FOR VISTING US")
+                print("THANK YOU", name1, "2 FOR VISTING US")
                 print("HOPE YOU LIKE OUR SERVICE")
                 print("\n")
             pass
@@ -245,9 +253,6 @@ while True:
         f1.close()
         os.remove("hotel.dat")
         os.rename("hotel.dat", "hotel.dat")
-
-
-
 
     elif k == "4":
         f2 = open("hotel.dat", "rb")
@@ -289,4 +294,3 @@ while True:
     else:
         print("invalid choice")
         continue
-
