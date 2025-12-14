@@ -179,109 +179,114 @@ class Guest:
         print(" HOPE YOU WOULD ENJOY OUR SERVICE ")
 
 
-while True:
-    print("\n")
-    print("1. Check in")
-    print("2. Show Guest List")
-    print("3. Check out")
-    print("4. Get info of guest")
-    print("5. EXIT")
-    menu_choice = input("Enter choice:")
-
-    if menu_choice == "1":
-        new_guest = Guest()
-        file_data = open("hotel.dat", "ab")
-        new_guest.enter_details()
-        new_guest.select_room_type()
-        new_guest.select_payment_method()
-        new_guest.generate_bill()
-        pickle.dump(new_guest, file_data, protocol=2)
-        file_data.close()
-
-    elif menu_choice == "2":
-        file_data = open("hotel.dat", "rb")
-        print("NAME", "\t", "\t", "ROOM NO.")
-        try:
-            while True:
-                guest_entry = pickle.load(file_data)
-                print(guest_entry.name, "\t", "\t", guest_entry.room)
-        except EOFError:
-            pass
-        file_data.close()
-
-    elif menu_choice == "3":
+def main():
+    while True:
         print("\n")
-        while True:
-            room_input = input("ENTER ROOM NO.")
-            if len(room_input):
-                break
-            else:
-                print("no input found")
-                continue
-        room_number = int(room_input)
-        file_data = open("hotel.dat", "rb")
-        file_data = open("hotel.dat", "ab")
-        is_found = 0
+        print("1. Check in")
+        print("2. Show Guest List")
+        print("3. Check out")
+        print("4. Get info of guest")
+        print("5. EXIT")
+        menu_choice = input("Enter choice:")
 
-        try:
-            while True:
-                guest_entry = pickle.load(file_data)
-                if guest_entry.room == room_number:
-                    is_found = 1
-                    removed_guest_name = guest_entry.name
-                    print(" ")
-                else:
-                    pickle.dump(guest_entry, file_data)
-        except EOFError:
-            if is_found == 0:
-                print("NO GUEST IN ROOM ", room_number)
-            elif is_found == 1:
-                print("THANK YOU", removed_guest_name, "2 FOR VISTING US")
-                print("HOPE YOU LIKE OUR SERVICE")
-                print("\n")
-            pass
-        file_data.close()
-        file_data.close()
-        os.remove("hotel.dat")
-        os.rename("hotel.dat", "hotel.dat")
+        if menu_choice == "1":
+            new_guest = Guest()
+            file_data = open("hotel.dat", "ab")
+            new_guest.enter_details()
+            new_guest.select_room_type()
+            new_guest.select_payment_method()
+            new_guest.generate_bill()
+            pickle.dump(new_guest, file_data, protocol=2)
+            file_data.close()
 
-    elif menu_choice == "4":
-        file_data = open("hotel.dat", "rb")
-        while True:
-            room_number = input("ENTER ROOM NO.")
-            if len(room_number):
-                break
-            else:
-                print("no input found")
-                continue
-        room_number = int(room_number)
-        try:
-            is_found = 0
+        elif menu_choice == "2":
+            file_data = open("hotel.dat", "rb")
+            print("NAME", "\t", "\t", "ROOM NO.")
+            try:
+                while True:
+                    guest_entry = pickle.load(file_data)
+                    print(guest_entry.name, "\t", "\t", guest_entry.room)
+            except EOFError:
+                pass
+            file_data.close()
+
+        elif menu_choice == "3":
+            print("\n")
             while True:
-                guest_entry = pickle.load(file_data)
-                new_guest = guest_entry.room
-                if room_number == new_guest:
-                    is_found = 1
-                    print("NAME-", "\t", "\t", guest_entry.name)
-                    print("\n")
-                    print("ADDRESS-", "\t", guest_entry.address)
-                    print("\n")
-                    print("MOBILE NO.-", "  ", guest_entry.mobile_no)
-                    print("\n")
-                    print("HIS TOTAL BILL IS Rs.", guest_entry.price)
-                elif EOFError:
-                    if is_found == 0:
-                        print("NO GUEST IN ROOM ", room_number)
+                room_input = input("ENTER ROOM NO.")
+                if len(room_input):
+                    break
                 else:
-                    is_found = 0
+                    print("no input found")
                     continue
-        except EOFError:
-            pass
-        file_data.close()
+            room_number = int(room_input)
+            file_data = open("hotel.dat", "rb")
+            file_data = open("hotel.dat", "ab")
+            is_found = 0
 
-    elif menu_choice == "5":
-        break
+            try:
+                while True:
+                    guest_entry = pickle.load(file_data)
+                    if guest_entry.room == room_number:
+                        is_found = 1
+                        removed_guest_name = guest_entry.name
+                        print(" ")
+                    else:
+                        pickle.dump(guest_entry, file_data)
+            except EOFError:
+                if is_found == 0:
+                    print("NO GUEST IN ROOM ", room_number)
+                elif is_found == 1:
+                    print("THANK YOU", removed_guest_name, "2 FOR VISTING US")
+                    print("HOPE YOU LIKE OUR SERVICE")
+                    print("\n")
+                pass
+            file_data.close()
+            file_data.close()
+            os.remove("hotel.dat")
+            os.rename("hotel.dat", "hotel.dat")
 
-    else:
-        print("invalid choice")
-        continue
+        elif menu_choice == "4":
+            file_data = open("hotel.dat", "rb")
+            while True:
+                room_number = input("ENTER ROOM NO.")
+                if len(room_number):
+                    break
+                else:
+                    print("no input found")
+                    continue
+            room_number = int(room_number)
+            try:
+                is_found = 0
+                while True:
+                    guest_entry = pickle.load(file_data)
+                    new_guest = guest_entry.room
+                    if room_number == new_guest:
+                        is_found = 1
+                        print("NAME-", "\t", "\t", guest_entry.name)
+                        print("\n")
+                        print("ADDRESS-", "\t", guest_entry.address)
+                        print("\n")
+                        print("MOBILE NO.-", "  ", guest_entry.mobile_no)
+                        print("\n")
+                        print("HIS TOTAL BILL IS Rs.", guest_entry.price)
+                    elif EOFError:
+                        if is_found == 0:
+                            print("NO GUEST IN ROOM ", room_number)
+                    else:
+                        is_found = 0
+                        continue
+            except EOFError:
+                pass
+            file_data.close()
+
+        elif menu_choice == "5":
+            break
+
+        else:
+            print("invalid choice")
+            continue
+
+
+if __name__ == "__main__":
+    main()
