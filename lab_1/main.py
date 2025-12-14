@@ -19,9 +19,8 @@ def chk_name():
         name = input("ENTER GUEST NAME:")
         a = name.isdigit()
 
-        if len(name) != 0 and a != True:
+        if len(name) != 0 and a:
             return name
-            break
         else:
             print("Invalid input! Please input a valid name")
             print(" ")
@@ -33,9 +32,8 @@ def chk_add():
         address = input("ENTER GUEST ADDRESS:")
         a = address.isdigit()
 
-        if len(address) != 0 and a != True:
+        if len(address) and not a:
             return address
-            break
         else:
             print("Invalid input ")
         print(" ")
@@ -46,11 +44,10 @@ def chk_mo():
         print("\n")
         mobile_no = input("ENTER MOBILE/PHONE NO.:")
 
-        if (mobile_no.isdigit() == True and
-                len(mobile_no) != 0 and
+        if (mobile_no.isdigit() and
+                len(mobile_no) and
                 len(mobile_no) == 10):
             return mobile_no
-            break
         else:
             print("invalid input ")
         print(" ")
@@ -62,9 +59,8 @@ def chk_day():
         no_of_days = input("ENTER NO. OF DAYS GUEST WANT TO STAY:")
         a = no_of_days.isdigit()
 
-        if a == True and len(no_of_days) != 0:
+        if a and len(no_of_days):
             return no_of_days
-            break
         else:
             print("invalid input ")
 
@@ -75,15 +71,14 @@ def chk_pay():
         op = input("Enter guest's choice:")
         a = op.isdigit()
 
-        if len(op) != 0 and a == True and (op == "1" or op == "2"):
+        if len(op) and a and op in {'1', '2'}:
             op = int(op)
             return op
-            break
         else:
             print("invalid input ")
 
 
-class save:
+class GUEST:
     price = 0
     room = "0"
 
@@ -108,8 +103,7 @@ class save:
         while True:
             ch = input("Enter guest's choice:")
             a = ch.isdigit()
-            if (len(ch) != 0 and a == True and
-                    (ch == "1" or ch == "2" or ch == "3" or ch == "4")):
+            if len(ch) and a and ch in {'1', '2', '3', '4'}:
                 break
             else:
                 print("invalid input")
@@ -220,12 +214,11 @@ while True:
         print("\n")
         while True:
             a = input("ENTER ROOM NO.")
-            if len(a) != 0:
+            if len(a):
                 break
             else:
                 print("no input found")
                 continue
-            v = int(a)
         v = int(a)
         f = open("hotel.dat", "rb")
         f1 = open("hotel.dat", "ab")
@@ -257,7 +250,7 @@ while True:
         f2 = open("hotel.dat", "rb")
         while True:
             v = input("ENTER ROOM NO.")
-            if len(v) != 0:
+            if len(v):
                 break
             else:
                 print("no input found")
