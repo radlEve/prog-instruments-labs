@@ -4,11 +4,29 @@ import pickle
 
 print('-' * 53, "5 STAR HOTEL AND RESORTS", '-' * 53)
 
-# list 'u' Not used
-DELUX_ROOMS = range(1, 11)
-SEMI_DELUX_ROOMS = range(11, 26)
-GENERAL_ROOMS = range(26, 46)
-JOINT_ROOMS = range(46, 51)
+ROOM_CONFIG = {
+    1: {
+        "name": "Delux",
+        "price": 2000,
+        "room_ids": range(1, 11)
+    },
+    2: {
+        "name": "Semi-Delux",
+        "price": 1500,
+        "room_ids": range(11, 26)
+    },
+    3: {
+        "name": "General",
+        "price": 1000,
+        "room_ids": range(26, 46)
+    },
+    4: {
+        "name": "Joint Room",
+        "price": 1700,
+        "room_ids": range(46, 51)
+    }
+}
+
 booking_details = [9]
 
 
@@ -95,33 +113,21 @@ class Guest:
         self.no_of_days = int(check_days())
 
     def select_room_type(self):
-        print("1. Delux")
-        print("2. Semi-Delux")
-        print("3. General")
-        print("4. Joint Room")
+        print("\nAvialable room types:")
+        for type_id, data in ROOM_CONFIG.items():
+            print(f"{type_id}.{data['name']} - Rs.{data['price']}")
+
         while True:
             choice = input("Enter guest's choice:")
-            a = choice.isdigit()
-            if len(choice) and a and choice in {'1', '2', '3', '4'}:
+            if choice.isdigit() and int(choice) in ROOM_CONFIG:
+                type_id = int(choice)
                 break
             else:
                 print("invalid input")
 
-        choice = int(choice)
-        if choice == 1:
-            self.price = self.price + (2000 * self.no_of_days)
-            booking_details[0] = 1
-        elif choice == 2:
-            self.price = self.price + (1500 * self.no_of_days)
-            booking_details[0] = 2
-        elif choice == 3:
-            self.price = self.price + (1000 * self.no_of_days)
-            booking_details[0] = 3
-        elif choice == 4:
-            self.price = self.price + (1700 * self.no_of_days)
-            booking_details[0] = 4
-        else:
-            print("invalid choice")
+        selected_room = ROOM_CONFIG[type_id]
+        self.price += selected_room['price'] * self.no_of_days
+        booking_details[0] = type_id
 
     def select_payment_method(self):
         print("1. By cash")
@@ -146,14 +152,7 @@ class Guest:
         print("YOUR TOTAL BILL IS Rs.", self.price)
         print("\n")
 
-        if booking_details[0] == 1:
-            available_rooms = DELUX_ROOMS
-        elif booking_details[0] == 2:
-            available_rooms = SEMI_DELUX_ROOMS
-        elif booking_details[0] == 3:
-            available_rooms = GENERAL_ROOMS
-        elif booking_details[0] == 4:
-            available_rooms = JOINT_ROOMS
+        room_ids = ROOM_CONFIG[booking_details[0]]['room_ids']
 
         occupied_rooms = []
         f2 = open("hotel.dat", "rb")
@@ -166,7 +165,7 @@ class Guest:
         except EOFError:
             pass
 
-        for room_number in available_rooms:
+        for room_number in room_ids:
             if room_number not in occupied_rooms:
                 print(self.name, " - room", room_number, "is alloted to you")
                 self.room = room_number
