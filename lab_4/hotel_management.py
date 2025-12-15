@@ -30,69 +30,13 @@ ROOM_CONFIG = {
 booking_details = [9]
 
 
-def check_name():
+def get_valid_input(prompt, validation_func, error_msg="Invalid input"):
     while True:
         print("\n")
-        name = input("ENTER GUEST NAME:")
-        is_numeric = name.isdigit()
-
-        if len(name) != 0 and is_numeric:
-            return name
-        else:
-            print("Invalid input! Please input a valid name")
-            print(" ")
-
-
-def check_address():
-    while True:
-        print("\n")
-        address = input("ENTER GUEST ADDRESS:")
-        is_numeric = address.isdigit()
-
-        if len(address) and not is_numeric:
-            return address
-        else:
-            print("Invalid input ")
-        print(" ")
-
-
-def check_mobile():
-    while True:
-        print("\n")
-        mobile_no = input("ENTER MOBILE/PHONE NO.:")
-
-        if (mobile_no.isdigit() and
-                len(mobile_no) and
-                len(mobile_no) == 10):
-            return mobile_no
-        else:
-            print("invalid input ")
-        print(" ")
-
-
-def check_days():
-    while True:
-        print("\n")
-        no_of_days = input("ENTER NO. OF DAYS GUEST WANT TO STAY:")
-        is_numeric = no_of_days.isdigit()
-
-        if is_numeric and len(no_of_days):
-            return no_of_days
-        else:
-            print("invalid input ")
-
-
-def check_payment_method():
-    while True:
-        print("\n")
-        option = input("Enter guest's choice:")
-        is_numeric = option.isdigit()
-
-        if len(option) and is_numeric and option in {'1', '2'}:
-            option = int(option)
-            return option
-        else:
-            print("invalid input ")
+        value = input(prompt)
+        if validation_func(value):
+            return value
+        print(error_msg)
 
 
 class Guest:
@@ -107,10 +51,19 @@ class Guest:
         self.room = "0"
 
     def enter_details(self):
-        self.name = check_name()
-        self.address = check_address()
-        self.mobile_no = check_mobile()
-        self.no_of_days = int(check_days())
+        self.name = get_valid_input("Enter guest's name: ",
+                                    lambda x: len(x) > 0 and not x.isdigit(),
+                                    "Invalid name! please use letters")
+        self.address = get_valid_input("Enter guest's address: ",
+                                       lambda x: len(x) > 0,
+                                       "Invalid address!")
+        self.mobile_no = get_valid_input("Enter mobile/phone no.: ",
+                                         lambda x: x.isdigit() and len(x) == 10,
+                                         "Invalid mobile/phone no! "
+                                         "Must be 10 digits")
+        self.no_of_days = int(get_valid_input("Enter number of days: ",
+                                              lambda x: x.isdigit() and
+                                              int(x) > 0, "Invalid days"))
 
     def select_room_type(self):
         print("\nAvialable room types:")
@@ -132,14 +85,13 @@ class Guest:
     def select_payment_method(self):
         print("1. By cash")
         print("2. By credit/debit card")
-        op = check_payment_method()
+        op = int(get_valid_input("Enter choice (1 or 2): ",
+                                 lambda x: x in ['1', '2'], 'Invalid choice!'))
         if op == 1:
             print("No discount.")
         elif op == 2:
-            self.price = self.price - ((self.price * 10) / 100)
+            self.price *= 0.9
             print("Discount of 10%.")
-        else:
-            print("Invalid option.")
 
     def generate_bill(self):
         print("\n")
