@@ -27,8 +27,6 @@ ROOM_CONFIG = {
     }
 }
 
-booking_details = [9]
-
 
 def get_valid_input(prompt, validation_func, error_msg="Invalid input"):
     while True:
@@ -40,204 +38,181 @@ def get_valid_input(prompt, validation_func, error_msg="Invalid input"):
 
 
 class Guest:
-    price = 0
-    room = "0"
-
-    def __init__(self):
+    def __init__(self, name, address, mobile_no, days):
+        self.name = name
+        self.address = address
+        self.mobile_no = mobile_no
+        self.days = days
         self.price = 0
-        self.name = " "
-        self.address = " "
-        self.no_of_days = 0
-        self.room = "0"
+        self.room_number = 0
+        self.room_type_id = 0
 
-    def enter_details(self):
-        self.name = get_valid_input("Enter guest's name: ",
-                                    lambda x: len(x) > 0 and not x.isdigit(),
-                                    "Invalid name! please use letters")
-        self.address = get_valid_input("Enter guest's address: ",
-                                       lambda x: len(x) > 0,
-                                       "Invalid address!")
-        self.mobile_no = get_valid_input("Enter mobile/phone no.: ",
-                                         lambda x: x.isdigit() and len(x) == 10,
-                                         "Invalid mobile/phone no! "
-                                         "Must be 10 digits")
-        self.no_of_days = int(get_valid_input("Enter number of days: ",
-                                              lambda x: x.isdigit() and
-                                              int(x) > 0, "Invalid days"))
+    def set_room_type(self, type_id):
+        if type_id in ROOM_CONFIG:
+            self.room_type_id = type_id
+            self.price += ROOM_CONFIG[type_id]['price'] * self.days
 
-    def select_room_type(self):
-        print("\nAvialable room types:")
-        for type_id, data in ROOM_CONFIG.items():
-            print(f"{type_id}.{data['name']} - Rs.{data['price']}")
-
-        while True:
-            choice = input("Enter guest's choice:")
-            if choice.isdigit() and int(choice) in ROOM_CONFIG:
-                type_id = int(choice)
-                break
-            else:
-                print("invalid input")
-
-        selected_room = ROOM_CONFIG[type_id]
-        self.price += selected_room['price'] * self.no_of_days
-        booking_details[0] = type_id
-
-    def select_payment_method(self):
-        print("1. By cash")
-        print("2. By credit/debit card")
-        op = int(get_valid_input("Enter choice (1 or 2): ",
-                                 lambda x: x in ['1', '2'], 'Invalid choice!'))
-        if op == 1:
-            print("No discount.")
-        elif op == 2:
+    def apply_payment_method(self, method_id):
+        if method_id == 2:
             self.price *= 0.9
-            print("Discount of 10%.")
 
-    def generate_bill(self):
-        print("\n")
-        print("NAME-", self.name)
-        print("\n")
-        print("ADDRESS-", self.address)
-        print("\n")
-        print("MOBILE NO.-", self.mobile_no)
-        print("\n")
-        print("YOUR TOTAL BILL IS Rs.", self.price)
-        print("\n")
+    def get_bill_info(self):
+        return (
+            "\n--- BILL ---\n"
+            f"name: {self.name}\n"
+            f"address: {self.address}\n"
+            f"mobile no: {self.mobile_no}\n"
+            f"total cost: {self.price}\n"
+            "------"
+        )
 
-        room_ids = ROOM_CONFIG[booking_details[0]]['room_ids']
 
-        occupied_rooms = []
-        f2 = open("hotel.dat", "rb")
-        try:
-            while True:
-                stored_guest = pickle.load(f2)
-                occupied_room_number = stored_guest.room
-                occupied_rooms.append(occupied_room_number)
-                continue
-        except EOFError:
-            pass
+def register_new_guest():
+    name = get_valid_input("Enter name", lambda x: len(x) > 0)
+    address = get_valid_input("Enter address", lambda x: len(x) > 0)
+    mobile = get_valid_input("Enter mobile no", lambda x: x.isdigit() and
+                                                          len(x) == 10)
+    days = int(get_valid_input("Enter days", lambda x: x.isdigit() and
+                                                       int(x) > 0))
 
-        for room_number in room_ids:
-            if room_number not in occupied_rooms:
-                print(self.name, " - room", room_number, "is alloted to you")
-                self.room = room_number
-                break
-            else:
-                continue
-        self.room = room_number
-        print("\n")
-        print(" THANK YOU ")
-        print(" HOPE YOU WOULD ENJOY OUR SERVICE ")
+    guest = Guest(name, address, mobile, days)
+
+    print("\nAvailable rooms:")
+    for r_id, data in ROOM_CONFIG.items():
+        print(f"{r_id}.{data['name']} - Rs. {data['price']}")
+
+    room_choice = int(get_valid_input("Select room type: ",
+                                      lambda x: x.isdigit() and
+                                                int(x) in ROOM_CONFIG))
+
+    guest.set_room_type(room_choice)
+
+    print("\nPayment method:\n1. Cash\n2. Card (10% discount)")
+    pay_method = int(get_valid_input("Select method: ",
+                                     lambda x: x in ['1', '2']))
+
+    guest.apply_payment_method(pay_method)
+
+    print(guest.get_bill_info())
+
+    return guest
+
+
+class HotelData:
+    def __init__(self, filename="hotel.dat"):
+        self.filename = filename
+
+    def save_guest(self, guest):
+        with open(self.filename, "ab") as f:
+            pickle.dump(guest, f, protocol=2)
+
+    def get_all_guests(self):
+        guests = []
+        if not os.path.exists(self.filename):
+            return guests
+
+        with open(self.filename, "rb") as f:
+            try:
+                while True:
+                    guests.append(pickle.load(f))
+            except EOFError:
+                pass
+        return guests
+
+    def get_occupied_rooms(self):
+        guests = self.get_all_guests()
+        return [g.room_number for g in guests]
+
+    def find_guest_by_room(self, room_number):
+        guests = self.get_all_guests()
+        for g in guests:
+            if g.room_number == room_number:
+                return g
+        return None
+
+    def delete_guest_by_room(self, room_number):
+        guests = self.get_all_guests()
+        new_list = [g for g in guests if g.room_number != room_number]
+
+        is_deleted = len(guests) != len(new_list)
+
+        if is_deleted:
+            with open(self.filename, "wb") as f:
+                for g in new_list:
+                    pickle.dump(g, f, protocol=2)
+
+        return is_deleted
 
 
 def main():
+    db = HotelData()
+
     while True:
-        print("\n")
+        print("\n=== HOTEL MANAGEMENT SYSTEM ===")
         print("1. Check in")
         print("2. Show Guest List")
         print("3. Check out")
         print("4. Get info of guest")
         print("5. EXIT")
-        menu_choice = input("Enter choice:")
+
+        menu_choice = get_valid_input("Enter choice: ",
+                                      lambda x: x in ['1', '2', '3', '4', '5'])
 
         if menu_choice == "1":
-            new_guest = Guest()
-            file_data = open("hotel.dat", "ab")
-            new_guest.enter_details()
-            new_guest.select_room_type()
-            new_guest.select_payment_method()
-            new_guest.generate_bill()
-            pickle.dump(new_guest, file_data, protocol=2)
-            file_data.close()
+            new_guest = register_new_guest()
+
+            room_ids = ROOM_CONFIG[new_guest.room_type_id]['room_ids']
+            occupied_rooms = db.get_occupied_rooms()
+
+            found = False
+            for r in room_ids:
+                if r not in occupied_rooms:
+                    new_guest.room_number = r
+                    print(f"Room {r} allocated successfully!")
+                    db.save_guest(new_guest)
+                    found = True
+                    break
+
+            if not found:
+                print("Sorry, no rooms available of this type.")
 
         elif menu_choice == "2":
-            file_data = open("hotel.dat", "rb")
-            print("NAME", "\t", "\t", "ROOM NO.")
-            try:
-                while True:
-                    guest_entry = pickle.load(file_data)
-                    print(guest_entry.name, "\t", "\t", guest_entry.room)
-            except EOFError:
-                pass
-            file_data.close()
+            guests = db.get_all_guests()
+            print(f"\n{'NAME':<20} {'ROOM NO.':<10}")
+            print("-" * 30)
+            for guest in guests:
+                print(f"{guest.name:<20} {guest.room_number:<10}")
 
         elif menu_choice == "3":
-            print("\n")
-            while True:
-                room_input = input("ENTER ROOM NO.")
-                if len(room_input):
-                    break
-                else:
-                    print("no input found")
-                    continue
-            room_number = int(room_input)
-            file_data = open("hotel.dat", "rb")
-            file_data = open("hotel.dat", "ab")
-            is_found = 0
-
-            try:
-                while True:
-                    guest_entry = pickle.load(file_data)
-                    if guest_entry.room == room_number:
-                        is_found = 1
-                        removed_guest_name = guest_entry.name
-                        print(" ")
-                    else:
-                        pickle.dump(guest_entry, file_data)
-            except EOFError:
-                if is_found == 0:
-                    print("NO GUEST IN ROOM ", room_number)
-                elif is_found == 1:
-                    print("THANK YOU", removed_guest_name, "2 FOR VISTING US")
-                    print("HOPE YOU LIKE OUR SERVICE")
-                    print("\n")
-                pass
-            file_data.close()
-            file_data.close()
-            os.remove("hotel.dat")
-            os.rename("hotel.dat", "hotel.dat")
+            room_num = int(
+                get_valid_input("ENTER ROOM NO: ", lambda x: x.isdigit()))
+            if db.delete_guest_by_room(room_num):
+                print(f"Guest checked out from room {room_num}.")
+            else:
+                print(f"No guest found in room {room_num}.")
 
         elif menu_choice == "4":
-            file_data = open("hotel.dat", "rb")
-            while True:
-                room_number = input("ENTER ROOM NO.")
-                if len(room_number):
-                    break
-                else:
-                    print("no input found")
-                    continue
-            room_number = int(room_number)
-            try:
-                is_found = 0
-                while True:
-                    guest_entry = pickle.load(file_data)
-                    new_guest = guest_entry.room
-                    if room_number == new_guest:
-                        is_found = 1
-                        print("NAME-", "\t", "\t", guest_entry.name)
-                        print("\n")
-                        print("ADDRESS-", "\t", guest_entry.address)
-                        print("\n")
-                        print("MOBILE NO.-", "  ", guest_entry.mobile_no)
-                        print("\n")
-                        print("HIS TOTAL BILL IS Rs.", guest_entry.price)
-                    elif EOFError:
-                        if is_found == 0:
-                            print("NO GUEST IN ROOM ", room_number)
-                    else:
-                        is_found = 0
-                        continue
-            except EOFError:
-                pass
-            file_data.close()
+            room_num = int(
+                get_valid_input("ENTER ROOM NO: ", lambda x: x.isdigit()))
+            guest = db.find_guest_by_room(room_num)
+            if guest:
+                print(guest.get_bill_info())
+            else:
+                print("Guest not found.")
 
         elif menu_choice == "5":
+            print("Exiting...")
             break
-
-        else:
-            print("invalid choice")
-            continue
 
 
 if __name__ == "__main__":
+    # we changed the class structure, old hotel.dat is incompatible.
+    if os.path.exists("hotel.dat"):
+        try:
+            with open("hotel.dat", "rb") as f:
+                pickle.load(f)
+        except (AttributeError, EOFError, ImportError):
+            print("Old database format detected. Resetting database...")
+            os.remove("hotel.dat")
+
     main()
