@@ -1,0 +1,14 @@
+2025-12-19 21:18:33.606 | INFO     | __main__:<module>:13 - System started
+2025-12-19 21:18:44.611 | INFO     | client:__init__:14 - Created client pop with account 68922
+2025-12-19 21:18:44.611 | DEBUG    | bank:update_db:11 - Database updated. Total clients: 1
+2025-12-19 21:18:51.299 | ERROR    | __main__:<module>:43 - Invalid deposit amount
+2025-12-19 21:19:00.362 | INFO     | client:__init__:14 - Created client rty with account 51758
+2025-12-19 21:19:00.362 | DEBUG    | bank:update_db:11 - Database updated. Total clients: 2
+2025-12-19 21:19:14.277 | SUCCESS  | bank:authentication:18 - Auth successful for user: pop
+2025-12-19 21:21:03.284 | DEBUG    | client:balance:43 - Account 68922: Balance check requested
+2025-12-19 21:21:10.622 | INFO     | client:withdraw:22 - Account 68922: Withdrawn 132. New balance: 1102
+2025-12-19 21:21:10.622 | DEBUG    | client:balance:43 - Account 68922: Balance check requested
+2025-12-19 21:21:19.080 | INFO     | client:deposit:36 - Account 68922: Deposit 1000000. New balance: 1001102
+2025-12-19 21:21:19.080 | DEBUG    | client:balance:43 - Account 68922: Balance check requested
+2025-12-19 21:21:22.738 | INFO     | __main__:<module>:73 - User logged out
+2025-12-19 21:21:25.556 | INFO     | __main__:<module>:84 - System shutdown
