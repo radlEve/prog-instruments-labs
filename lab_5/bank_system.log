@@ -12,3 +12,75 @@
 2025-12-19 21:21:19.080 | DEBUG    | client:balance:43 - Account 68922: Balance check requested
 2025-12-19 21:21:22.738 | INFO     | __main__:<module>:73 - User logged out
 2025-12-19 21:21:25.556 | INFO     | __main__:<module>:84 - System shutdown
+2025-12-25 04:01:24 | INFO | Welcome to International Bank!
+2025-12-25 04:01:24 | INFO | System started
+2025-12-25 04:01:24 | INFO | 
+Choose an option:
+1. Open new bank account
+2. Open existing bank account
+3. Exit
+2025-12-25 04:01:29 | INFO | To create an account, please fill in the information below.
+2025-12-25 04:01:35 | INFO | Created client вцавы with account 10994
+2025-12-25 04:01:35 | DEBUG | Database updated. Total clients: 1
+2025-12-25 04:01:35 | SUCCESS | Account created successfully! Your account number is: 10994
+2025-12-25 04:01:35 | INFO | 
+Choose an option:
+1. Open new bank account
+2. Open existing bank account
+3. Exit
+2025-12-25 04:01:37 | INFO | To access your account, please enter your credentials below.
+2025-12-25 04:02:10 | SUCCESS | Auth successful for user: вцавы
+2025-12-25 04:02:10 | INFO | Welcome вцавы!
+2025-12-25 04:02:10 | INFO | 
+Choose an option:
+1. Withdraw
+2. Deposit
+3. Balance
+4. Exit
+2025-12-25 04:02:19 | INFO | Account 10994: Withdrawn 10. New balance: 12
+2025-12-25 04:02:19 | INFO | Account 10994: Current balance is 12
+2025-12-25 04:02:19 | INFO | 
+Choose an option:
+1. Withdraw
+2. Deposit
+3. Balance
+4. Exit
+2025-12-25 04:02:30 | INFO | Account 10994: Deposit 234234. New balance: 234246
+2025-12-25 04:02:30 | INFO | Account 10994: Current balance is 234246
+2025-12-25 04:02:30 | INFO | 
+Choose an option:
+1. Withdraw
+2. Deposit
+3. Balance
+4. Exit
+2025-12-25 04:02:35 | WARNING | Account 10994: Failed to withdraw 5637653443. Insufficient funds.
+2025-12-25 04:02:35 | INFO | Account 10994: Current balance is 234246
+2025-12-25 04:02:35 | INFO | 
+Choose an option:
+1. Withdraw
+2. Deposit
+3. Balance
+4. Exit
+2025-12-25 04:02:43 | INFO | Thank you for visiting!
+2025-12-25 04:02:43 | INFO | User logged out
+2025-12-25 04:02:43 | INFO | 
+Choose an option:
+1. Open new bank account
+2. Open existing bank account
+3. Exit
+2025-12-25 04:02:47 | INFO | To access your account, please enter your credentials below.
+2025-12-25 04:02:51 | ERROR | Invalid input for account number
+2025-12-25 04:02:51 | INFO | 
+Choose an option:
+1. Open new bank account
+2. Open existing bank account
+3. Exit
+2025-12-25 04:02:56 | INFO | To create an account, please fill in the information below.
+2025-12-25 04:03:02 | ERROR | Invalid deposit amount
+2025-12-25 04:03:02 | INFO | 
+Choose an option:
+1. Open new bank account
+2. Open existing bank account
+3. Exit
+2025-12-25 04:03:05 | INFO | Goodbye!
+2025-12-25 04:03:05 | INFO | System shutdown
